@@ -1,8 +1,12 @@
 const express = require('express');
 const axios = require('axios');
+const path = require('path');
 require('dotenv').config(); // .env 파일의 API 키를 읽어오기
 
 const app = express();
+const PORT = 3000;
+
+app.use(express.static('public'));
 
 app.get('/api/weather', async (req, res) => {
     // fetchWeather에서 보낸 쿼리 파라미터(lat, lon) 받기
@@ -26,4 +30,9 @@ app.get('/api/weather', async (req, res) => {
         console.error("API 호출 에러:", error);
         res.status(500).json({ error: "날씨 정보를 가져오는 데 실패했습니다." });
     }
+});
+
+// 서버 실행
+app.listen(PORT, () => {
+    console.log(`서버가 http://localhost:${PORT} 에서 실행 중입니다.`);
 });
