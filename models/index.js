@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const User = require('./user'); // 1. User 설계도 가져오기
 
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const config = require(__dirname + '/../config/config.js')[env];
 const db = {};
 
 const sequelize = new Sequelize(
