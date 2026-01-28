@@ -6,6 +6,7 @@ const session = require('express-session');
 const nunjucks = require('nunjucks');
 const dotenv = require('dotenv');
 const passport = require('passport');
+const weatherRouter = require('./routes/weather');
 
 const { sequelize } = require('./models'); // DB 연결용
 
@@ -49,3 +50,5 @@ app.use(passport.session());
 app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 대기 중!');
 });
+
+app.use('/weather', weatherRouter);
