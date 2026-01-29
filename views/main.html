@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>지구를 위해 On</h1>
+        
+        {% if user %}
+            <p><strong>{{user.nick}}</strong>님, 환영합니다!</p>
+            <p>현재 적용 계수: <strong>0.4173</strong></p>
+            <button onclick="location.href='/weather'">날씨 비교 대시보드</button>
+            <a href="/auth/logout" style="display:block; margin-top:15px; color:#666;">로그아웃</a>
+        {% else %}
+            <form action="/auth/login" method="post">
+                <input type="email" name="email" placeholder="이메일" required>
+                <input type="password" name="password" placeholder="비밀번호" required>
+                <button type="submit">로그인</button>
+            </form>
+            <a href="/auth/kakao" class="btn-kakao">카카오 로그인</a>
+            <p style="margin-top:20px;">계정이 없으신가요? <a href="/join">회원가입</a></p>
+        {% endif %}
+    </div>
+
+{% endblock %}
