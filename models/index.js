@@ -1,6 +1,7 @@
-const Sequelize = require('sequelize');
+const Sequelize = require('sequelize');  // 파일 가져오기
 const User = require('./user');
-const ClimateData = require('./climatedata'); // 설계도 가져오기
+const ClimateData = require('./climatedata');
+const EmissionFactor = require('./emission_factor');
 
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.js')[env];
@@ -12,16 +13,18 @@ const sequelize = new Sequelize(
 
 db.sequelize = sequelize;
 
-// 1. db 객체에 모델들 담기
+// db 객체에 담기
 db.User = User;
 db.ClimateData = ClimateData;
+db.EmissionFactor = EmissionFactor;
 
-// 2. 각 모델 초기화 (initiate)
+// 모델 초기화
 User.initiate(sequelize);
 ClimateData.initiate(sequelize);
+EmissionFactor.initiate(sequelize); 
 
-// 3. 관계 설정
 User.associate(db);
 ClimateData.associate(db);
+EmissionFactor.associate(db); 
 
 module.exports = db;

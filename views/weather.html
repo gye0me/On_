@@ -3,10 +3,16 @@
 {% block content %}
   <h1>{{ title }}</h1>
   <div class="weather-info">
-    <p>현재 기온: <strong>{{ weather.temp }}도</strong></p>
-    <p>오늘의 추천 겉옷: {{ weather.outer }}</p>
-    <p>상의: {{ weather.top }} / 하의: {{ weather.bottom }}</p>
-    <p>탄소배출계수: {{ weather.carbonIndex }}</p> </div>
+    <ul>
+  {% for data in pastWeathers %}
+    <li>
+      <strong>{{ data.createdAt.getFullYear() }}년:</strong> 
+      평균 {{ data.temp }}도 (예상 탄소 배출량: {{ data.carbonG }}g)
+    </li>
+  {% endfor %}
+</ul>
+
+<p>현재 적용 중인 탄소 배출 계수: {{ emissionFactor }} tCO2-eq/MWh</p>
 
 <hr>
 
@@ -16,7 +22,7 @@
     {% for data in pastWeathers %}
       <li>
         <strong>{{ data.createdAt.getFullYear() }}년:</strong> 
-        평균 {{ data.temp }}도 (탄소지수: {{ data.carbonIndex }})
+        평균 {{ data.temp }}도
       </li>
     {% else %}
       <p>⚠️ DB에 오늘({{ todayMD }}) 날짜의 과거 데이터가 아직 없습니다.</p>
