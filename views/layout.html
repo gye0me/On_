@@ -13,5 +13,15 @@
       {% block content %}
       {% endblock %}
     </div>
+    {% if user and user.id %}
+      <div class="user-info">
+        <span>안녕하세요, {{user.nick}}님!</span>
+        <a href="/auth/logout" class="btn">로그아웃</a>
+      </div>
+    {% else %}
+      <div class="login-buttons">
+        <a href="/auth/kakao" class="btn-kakao">카카오 로그인</a>
+        </div>
+    {% endif %}
   </body>
 </html>

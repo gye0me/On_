@@ -7,6 +7,8 @@ const nunjucks = require('nunjucks');
 const dotenv = require('dotenv');
 const passport = require('passport');
 const weatherRouter = require('./routes/weather');
+const passportConfig = require('./passport');
+const authRouter = require('./routes/auth');
 
 const { sequelize } = require('./models'); // DB 연결용
 
@@ -52,3 +54,20 @@ app.listen(app.get('port'), () => {
 });
 
 app.use('/weather', weatherRouter);
+
+passportConfig();
+
+app.use(session({
+  resave: false,
+  saveUninitialized: false,
+  secret: process.env.COOKIE_SECRET,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/auth', authRouter);
