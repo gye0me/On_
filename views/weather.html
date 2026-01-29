@@ -7,4 +7,21 @@
     <p>오늘의 추천 겉옷: {{ weather.outer }}</p>
     <p>상의: {{ weather.top }} / 하의: {{ weather.bottom }}</p>
     <p>탄소배출계수: {{ weather.carbonIndex }}</p> </div>
+
+<hr>
+
+<div class="history-section">
+  <h3>📅 {{ todayMD }} 지난 5년간의 기록</h3>
+  <ul>
+    {% for data in pastWeathers %}
+      <li>
+        <strong>{{ data.createdAt.getFullYear() }}년:</strong> 
+        평균 {{ data.temp }}도 (탄소지수: {{ data.carbonIndex }})
+      </li>
+    {% else %}
+      <p>⚠️ DB에 오늘({{ todayMD }}) 날짜의 과거 데이터가 아직 없습니다.</p>
+      <p>Tip: weather.js를 실행해서 2021~2025년 데이터를 먼저 수집해 주세요!</p>
+    {% endfor %}
+  </ul>
+</div>
 {% endblock %}

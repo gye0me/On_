@@ -3,8 +3,8 @@ const { ClimateData } = require('./models');
 require('dotenv').config();
 
 const collectFiveYearsData = async () => {
-  // 1. 수집하고 싶은 연도 리스트
-  const years = ['2021', '2022', '2023', '2024', '2025'];
+  // 수집하고 싶은 연도 리스트
+  const years = ['2021', '2022', '2023', '2024', '2025',];
 
   for (const year of years) {
     try {
@@ -20,6 +20,7 @@ const collectFiveYearsData = async () => {
           dateCd: 'DAY',
           startDt: `${year}0101`, // 각 연도 1월 1일부터
           endDt: `${year}1231`,   // 각 연도 12월 31일까지
+          numOfRows: 366,         // 1년치를 한 번에 가져오도록 최대 용량 설정
           stnIds: '108'
         }
       });
@@ -27,7 +28,7 @@ const collectFiveYearsData = async () => {
       const items = response.data.response.body.items.item;
 
       if (items && items.length > 0) {
-        // 2. 한꺼번에 DB에 넣기 (bulkCreate가 훨씬 빠름)
+        // 한꺼번에 DB에 넣기 (bulkCreate가 훨씬 빠름)
         const weatherData = items.map(item => {
           const avgTemp = parseFloat(item.avgTa);
           
@@ -50,7 +51,7 @@ const collectFiveYearsData = async () => {
         console.log(`✅ ${year}년 데이터 (${items.length}건) 저장 완료`);
       }
 
-      // ⚠️ 기상청 서버를 배려해 1초 정도 쉬었다가 다음 연도 진행
+      // 기상청 서버를 배려해 1초 정도 쉬었다가 다음 연도 진행
       await new Promise(resolve => setTimeout(resolve, 1000));
 
     } catch (error) {
