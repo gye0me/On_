@@ -1,0 +1,197 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="action-wrap">
+    <div class="summary-section">
+        <h3>오늘 절감한 탄소</h3>
+        <div class="total-kg"><span id="total-val">0.0</span>Kg</div>
+        
+        <p>실천 미션 <span id="mission-count">0</span>/7</p>
+        
+        <p class="tree-text" style="display: none;">🌳 소나무 0그루가 하루 동안 흡수하는 양</p>
+    </div>
+
+    <div class="mission-container">
+        <div class="mission-card" data-content="에어컨 1°C 올리기" data-reduction="0.5">
+            <div class="mission-info">
+                <h4>에어컨 1°C 올리기 🎐</h4>
+                <p>설정 온도를 26°C로 유지하면 전력 소비 7% 절감</p>
+                <span class="badge energy">에너지</span> 
+                <span class="reduction-text">-0.5 kg CO₂</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" onchange="submitAction(this)">
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="mission-card" data-content="텀블러 사용하기" data-reduction="0.3">
+            <div class="mission-info">
+                <h4>텀블러 사용하기 ☕</h4>
+                <p>일회용 컵 대신 개인 텀블러를 사용하세요</p>
+                <span class="badge life">생활</span> 
+                <span class="reduction-text">-0.3 kg CO₂</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" onchange="submitAction(this)">
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="mission-card" data-content="불필요한 조명 끄기" data-reduction="0.2">
+            <div class="mission-info">
+                <h4>불필요한 조명 끄기 💡</h4>
+                <p>사용하지 않는 공간의 조명을 소등하세요</p>
+                <span class="badge energy">에너지</span> 
+                <span class="reduction-text">-0.2 kg CO₂</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" onchange="submitAction(this)">
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="mission-card" data-content="대중교통 이용하기" data-reduction="2.4">
+            <div class="mission-info">
+                <h4>대중교통 이용하기 🚌</h4>
+                <p>자가용 대신 버스나 지하철 이용 (10km 기준)</p>
+                <span class="badge infra">이동</span> 
+                <span class="reduction-text">-2.4 kg CO₂</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" onchange="submitAction(this)">
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="mission-card" data-content="샤워 시간 줄이기" data-reduction="0.4">
+            <div class="mission-info">
+                <h4>샤워 시간 줄이기 🚿</h4>
+                <p>샤워 시간 5분 단축으로 온수 사용을 절감하세요</p>
+                <span class="badge water">자원</span> 
+                <span class="reduction-text">-0.4 kg CO₂</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" onchange="submitAction(this)">
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="mission-card" data-content="장바구니 사용하기" data-reduction="0.1">
+            <div class="mission-info">
+                <h4>장바구니 사용하기 🛍️</h4>
+                <p>비닐봉투 대신 에코백을 사용하세요</p>
+                <span class="badge life">생활</span> 
+                <span class="reduction-text">-0.1 kg CO₂</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" onchange="submitAction(this)">
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="mission-card" data-content="자연 환기 사용" data-reduction="1.2">
+            <div class="mission-info">
+                <h4>자연 환기 사용 🍃</h4>
+                <p>에어컨 대신 선풍기와 환기로 냉방하세요</p>
+                <span class="badge energy">에너지</span> 
+                <span class="reduction-text">-1.2 kg CO₂</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" onchange="submitAction(this)">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<script>
+    const initialActions = {{ actions | dump | safe }};
+
+    let totalReduction = 0;
+    let missionCount = 0;
+
+    // 페이지 로드 시 실행되는 함수
+    window.onload = () => {
+        // 기존 데이터가 있다면 합계 계산 및 체크박스 표시
+        if (initialActions && initialActions.length > 0) {
+            initialActions.forEach(action => {
+                totalReduction += parseFloat(action.reduction);
+                missionCount += 1;
+                
+                const cards = document.querySelectorAll('.mission-card');
+                cards.forEach(card => {
+                    if (card.dataset.content === action.content) {
+                        card.classList.add('is-complete');
+                        const checkbox = card.querySelector('input[type="checkbox"]');
+                        if (checkbox) checkbox.checked = true;
+                    }
+                });
+            });
+        } else {
+            // 저장된 데이터가 아예 없을 때만 0.0으로 초기화
+            totalReduction = 0;
+            missionCount = 0;
+        }
+
+        // 최종 계산된 값으로 UI 업데이트
+        updateUI(); 
+    };
+    
+    function updateUI() {
+        const totalValElement = document.getElementById('total-val');
+        const missionCountElement = document.getElementById('mission-count');
+        const treeText = document.querySelector('.tree-text');
+
+        if (totalValElement) totalValElement.innerText = totalReduction.toFixed(1);
+        if (missionCountElement) missionCountElement.innerText = missionCount;
+
+        if (totalReduction > 0) {
+            treeText.style.display = 'block';
+            const treeCount = (totalReduction / 0.002).toFixed(1); 
+            treeText.innerHTML = `🌳 소나무 ${treeCount}그루가 하루 동안 흡수하는 양`;
+        } else {
+            treeText.style.display = 'none';
+        }
+    }
+
+    // action.html의 submitAction 함수 수정
+
+    async function submitAction(checkbox) {
+        const card = checkbox.closest('.mission-card');
+        const content = card.dataset.content;
+        const reduction = parseFloat(card.dataset.reduction);
+
+        if (checkbox.checked) {
+            // 체크 시 데이터 저장
+            try {
+                const response = await fetch('/action', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content, reduction })
+                });
+                if (response.ok) {
+                    totalReduction += reduction;
+                    missionCount += 1;
+                    card.classList.add('is-complete');
+                }
+            } catch (err) { console.error(err); }
+        } else {
+            // 체크 해제 시 데이터 삭제 요청 추가
+            try {
+                const response = await fetch('/action', {
+                    method: 'DELETE', // DELETE 메서드 사용
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content })
+                });
+                if (response.ok) {
+                    totalReduction -= reduction;
+                    missionCount -= 1;
+                    card.classList.remove('is-complete');
+                }
+            } catch (err) { console.error(err); }
+        }
+        updateUI(); // UI 업데이트 함수 호출
+    }
+</script>
+{% endblock %}
