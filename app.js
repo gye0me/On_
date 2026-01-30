@@ -6,6 +6,7 @@ const session = require('express-session');
 const nunjucks = require('nunjucks');
 const dotenv = require('dotenv');
 const passport = require('passport');
+const actionRouter = require('./routes/action');
 
 dotenv.config();
 
@@ -60,8 +61,11 @@ app.use((req, res, next) => {
 // 라우터 연결
 app.use('/auth', authRouter);
 app.use('/weather', weatherRouter);
+app.use('/auth', authRouter);
+app.use('/weather', weatherRouter);
+app.use('/action', actionRouter);
 
-// [수정] 테스트 라우터를 다른 라우터보다 '위'에 배치해서 가로채기 확인
+// 수정 테스트 라우터를 다른 라우터보다 '위'에 배치해서 가로채기 확인
 app.get('/debug-test', (req, res) => {
   res.send('<h1>라우터 연결 성공! 이 글자가 보이나요?</h1>');
 });

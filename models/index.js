@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');  // 파일 가져오기
 const User = require('./user');
 const ClimateData = require('./climatedata');
 const EmissionFactor = require('./emission_factor');
+const Action = require('./action');
 
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.js')[env];
@@ -17,14 +18,17 @@ db.sequelize = sequelize;
 db.User = User;
 db.ClimateData = ClimateData;
 db.EmissionFactor = EmissionFactor;
+db.Action = Action;
 
 // 모델 초기화
 User.initiate(sequelize);
 ClimateData.initiate(sequelize);
 EmissionFactor.initiate(sequelize); 
+Action.initiate(sequelize);
 
 User.associate(db);
 ClimateData.associate(db);
 EmissionFactor.associate(db); 
+Action.associate(db);
 
 module.exports = db;
