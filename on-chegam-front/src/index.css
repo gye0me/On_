@@ -1,0 +1,34 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #f5f6f7; /* App.jsx 배경과 맞춤 */
+  color: #111;
+}
+
+/* 링크 기본값 */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 버튼은 페이지별 스타일을 우선하게 기본만 */
+button {
+  font-family: inherit;
+}
